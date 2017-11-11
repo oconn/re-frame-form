@@ -7,13 +7,12 @@
   (reg-sub :form (fn [{:keys [form]}] form))
 
   (reg-sub
-   :form/subscribe-to
+   :form/form
    (fn [_ _] (subscribe [:form]))
-   (fn [forms [_ {:keys [:form/id]}]]
-     (get forms id)))
+   (fn [forms [_ id]] (get forms id)))
 
   (reg-sub
-   :form/subscribe-to-input
+   :form/field
    (fn [_ _] (subscribe [:form]))
    (fn [forms [_ {:keys [:form/id :field/key]}]]
      {:value (get-in forms [id :data key])

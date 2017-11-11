@@ -20,17 +20,16 @@
          form-interceptors []}}]
 
   (reg-event-db
-   :form/init-field
+   :form/initialize-field
    (into form-interceptors init-field-interceptors)
-   (fn [db [_ {:keys [:form/id
-                     :field/default-value
-                     :field/errors
-                     :field/key
-                     :field/transformers
-                     :field/validators]
-              :or {errors default-errors
-                   transformers default-transformers
-                   validators default-validators}}]]
+   (fn [db [_ id {:keys [:field/default-value
+                        :field/errors
+                        :field/key
+                        :field/transformers
+                        :field/validators]
+                 :or {errors default-errors
+                      transformers default-transformers
+                      validators default-validators}}]]
      (-> db
          (assoc-in [:form id :data key] default-value)
          (assoc-in [:form id :errors key] errors)
@@ -40,20 +39,18 @@
   (reg-event-db
    :form/update-field-value
    (into form-interceptors update-field-value-interceptors)
-   (fn [db [_ {:keys [:form/id
-                     :field/key
-                     :field/value]}]]
+   (fn [db [_ id {:keys [:field/key
+                        :field/value]}]]
      (-> db
          (assoc-in [:form id :data key] value)
          (assoc-in [:form id :errors key] default-errors))))
 
   (reg-event-db
-   :form/update-field-error
+   :form/update-field-errors
    (into form-interceptors update-field-error-interceptors)
-   (fn [db [_ {:keys [:form/id
-                     :field/key
-                     :field/error]}]]
-     (assoc-in db [:form id :errors key] error)))
+   (fn [db [_ id {:keys [:field/key
+                        :field/errors]}]]
+     (assoc-in db [:form id :errors key] errors)))
 
   (reg-event-db
    :form/clear
