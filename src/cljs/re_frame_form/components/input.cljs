@@ -35,8 +35,7 @@
         (:rff/input params)
 
         input-data
-        (re-frame/subscribe [:form/field {:form/id form-id
-                                          :field/key key}])
+        (re-frame/subscribe [:form/field form-id key])
 
         mounted-node
         (assoc-in node [1]

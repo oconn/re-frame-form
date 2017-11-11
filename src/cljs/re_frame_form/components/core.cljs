@@ -4,7 +4,8 @@
 
             [re-frame-form.components.button :as button]
             [re-frame-form.components.form :as form]
-            [re-frame-form.components.input :as input]))
+            [re-frame-form.components.input :as input]
+            [re-frame-form.components.field-error :as field-error]))
 
 (defn- rff-node?
   [node key]
@@ -26,14 +27,8 @@
        (rff-node? node :rff/submit-button)
        [button/mount-submit-button node id]
 
-       ;; (form-node? node :rff/input-label)
-       ;; [modify-input-label node form-name]
-
-       ;; (form-node? node :rff/input-error)
-       ;; [modify-input-error node form-name]
-
-       ;; (form-node? node :rff/input-hint)
-       ;; [modify-input-hint node form-name]
+       (rff-node? node :rff/field-error)
+       [field-error/mount-field-error node id]
 
        ;; TODO Check custom nodes
 

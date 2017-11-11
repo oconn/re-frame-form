@@ -14,6 +14,11 @@
   (reg-sub
    :form/field
    (fn [_ _] (subscribe [:form]))
-   (fn [forms [_ {:keys [:form/id :field/key]}]]
+   (fn [forms [_ id key]]
      {:value (get-in forms [id :data key])
-      :errors (get-in forms [id :errors key])})))
+      :errors (get-in forms [id :errors key])}))
+
+  (reg-sub
+   :form/field-errors
+   (fn [_ [_ id key]] (subscribe [:form/field id key]))
+   (fn [{:keys [errors]} _] errors)))
