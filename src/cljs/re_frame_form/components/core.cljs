@@ -37,3 +37,18 @@
 (defn form
   [form-data html]
   [postwalk (walk-node form-data) html])
+
+(defn input
+  [{:keys [type key label validators transformers masks]
+    :or {type "text"
+         validators []
+         transformers []
+         masks []}}]
+  [:div.rff-input
+   [:label.rff-input-label {:for key} label]
+   [:input.rff-input {:rff/input {:key key
+                                  :validators validators
+                                  :transformers transformers
+                                  :masks masks}
+                      :id key}]
+   [:p.rff-field-error {:rff/field-error {:key key}}]])

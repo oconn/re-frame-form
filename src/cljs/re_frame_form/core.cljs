@@ -50,3 +50,4 @@
   (register-subscriptions))
 
 (def form rff-components/form)
+(def input rff-components/input)
