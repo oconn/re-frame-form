@@ -40,7 +40,7 @@
 
 (defn input
   [{:keys [type key label validators transformers masks]
-    :or {type "text"
+    :or {type :text
          validators []
          transformers []
          masks []}}]
@@ -50,5 +50,6 @@
                                   :validators validators
                                   :transformers transformers
                                   :masks masks}
-                      :id key}]
+                      :id key
+                      :type type}]
    [:p.rff-field-error {:rff/field-error {:key key}}]])
