@@ -10,7 +10,7 @@
       (.-value target))))
 
 (defn add-class
-  [class-name node]
+  [node class-name]
   (update-in node [0]
              #(keyword (str (name %) "." class-name))))
 

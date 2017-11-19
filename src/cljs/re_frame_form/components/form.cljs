@@ -15,13 +15,18 @@
 (defn- form-submit-fn
   [form-id
    {:keys [on-submit clear-on-submit]
-    :or {clear-on-submit false}}]
+    :or {clear-on-submit false}}
+   is-submitting]
   (let [form-data (re-frame/subscribe [:form/form form-id])]
     (fn [e]
       (.preventDefault e)
 
-      (let [errors (u/validate-form! @form-data form-id)]
-        (when (empty? (filter not-empty errors))
+      (let [errors (u/validate-form! @form-data form-id)
+            no-errors (empty? (filter not-empty errors))
+            is-submitting-value (and (not (nil? is-submitting))
+                                     (= true @is-submitting))]
+
+        (when (and no-errors (not is-submitting-value))
 
           (when clear-on-submit
             (re-frame/dispatch [:form/clear-form form-id]))
@@ -31,14 +36,15 @@
                          :data)))))))
 
 (defn mount-form
-  [node form-id]
+  [node form-id is-submitting]
   (let [params (second node)
 
         mounted-node
         (assoc-in node [1]
                   (-> params
-                      (dissoc :rff)
+                      (dissoc :rff/form)
                       (assoc :on-submit (form-submit-fn form-id
-                                                        (:rff/form params)))))]
+                                                        (:rff/form params)
+                                                        is-submitting))))]
     (fn []
       mounted-node)))

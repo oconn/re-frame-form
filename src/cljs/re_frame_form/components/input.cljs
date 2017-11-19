@@ -23,7 +23,7 @@
                        form-id)))
 
 (defn- mount-input
-  [node form-id]
+  [node form-id is-submitting]
   (let [params
         (second node)
 
@@ -52,8 +52,12 @@
                          :field/transformers transformers}])
     (fn []
       (let [{value :value
-             errors :errors} @input-data]
-        (let [node-with-value (assoc-in mounted-node [1 :value] value)]
+             errors :errors} @input-data
+            disabled (when (not (nil? is-submitting))
+                       @is-submitting)]
+        (let [node-with-value (-> mounted-node
+                                  (assoc-in [1 :value] value)
+                                  (assoc-in [1 :disabled] disabled))]
           (if (not-empty errors)
-            (u/add-class "error" node-with-value)
+            (u/add-class node-with-value "error")
             node-with-value))))))

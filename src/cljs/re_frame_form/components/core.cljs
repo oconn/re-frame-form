@@ -15,17 +15,23 @@
 (defn- walk-node
   ([form-data]
    (walk-node form-data []))
-  ([{:keys [id]} custom-nodes]
+  ([{:keys [id is-submitting]} custom-nodes]
+   (when (and (not (nil? is-submitting))
+              (not= (type is-submitting)
+                    reagent.ratom/Reaction))
+     (throw
+      (js/Error. "When passing \"is-submitting\" into re-frame-from, you must pass a reagent ratom")))
+
    (fn [node]
      (cond
        (rff-node? node :rff/form)
-       [form/mount-form node id]
+       [form/mount-form node id is-submitting]
 
        (rff-node? node :rff/input)
-       [input/mount-input node id]
+       [input/mount-input node id is-submitting]
 
        (rff-node? node :rff/submit-button)
-       [button/mount-submit-button node id]
+       [button/mount-submit-button node id is-submitting]
 
        (rff-node? node :rff/field-error)
        [field-error/mount-field-error node id]
@@ -44,7 +50,7 @@
          validators []
          transformers []
          masks []}}]
-  [:div.rff-input
+  [:div.rff-input-wrapper
    [:label.rff-input-label {:for key} label]
    [:input.rff-input {:rff/input {:key key
                                   :validators validators
