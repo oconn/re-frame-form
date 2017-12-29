@@ -1,6 +1,7 @@
 (set-env! :resource-paths #{"src/cljs"}
           :source-paths   #{"test/cljs"}
-          :dependencies   '[[org.clojure/clojurescript "1.9.946" :scope "provided"]
+          :dependencies   '[[com.cognitect/transit-cljs "0.8.243"]
+                            [org.clojure/clojurescript "1.9.946" :scope "provided"]
                             [re-frame                  "0.10.2"  :scope "provided"]
 
                             [adzerk/bootlaces  "0.1.13" :scope "test"]
