@@ -15,6 +15,7 @@
   {})
 
 (s/def ::data map?)
+(s/def ::defaults ::data)
 
 (s/def ::errors
   (s/map-of keyword? (s/coll-of string?)))
@@ -29,6 +30,7 @@
   (s/map-of keyword? (s/coll-of fn?)))
 
 (s/def ::form (s/map-of keyword? (s/keys :req-un [::data
+                                                  ::defaults
                                                   ::errors
                                                   ::validators
                                                   ::transformers])))
@@ -51,3 +53,4 @@
 
 (def form rff-components/form)
 (def input rff-components/input)
+(def select rff-components/select)

@@ -3,26 +3,7 @@
 
             [re-frame-form.components.utils :as u]))
 
-(defn- input-change-fn
-  [form-id
-   {:keys [key masks]}]
-  (fn [e]
-    (re-frame/dispatch
-     [:form/update-field-value
-      form-id
-      {:field/key key
-       :field/value ((apply comp masks) (u/get-event-value e))}])))
-
-(defn- input-blur-fn
-  [form-id
-   {:keys [key validators]}]
-  (fn [e]
-    (u/validate-field! (u/get-event-value e)
-                       validators
-                       key
-                       form-id)))
-
-(defn- mount-input
+(defn mount-input
   [node form-id is-submitting]
   (let [params
         (second node)
@@ -41,15 +22,15 @@
         (assoc-in node [1]
                   (-> params
                       (dissoc :rff/input)
-                      (merge {:on-change (input-change-fn form-id rff-params)
-                              :on-blur (input-blur-fn form-id rff-params)})))]
+                      (merge {:on-change (u/input-change-fn form-id rff-params)
+                              :on-blur (u/input-blur-fn form-id rff-params)})))]
 
-    (re-frame/dispatch [:form/initialize-field
-                        form-id
-                        {:field/key key
-                         :field/default-value default-value
-                         :field/validators validators
-                         :field/transformers transformers}])
+    (u/initialize-field {:key key
+                         :validators validators
+                         :transformers transformers
+                         :default-value default-value
+                         :form-id form-id})
+
     (fn []
       (let [{value :value
              errors :errors} @input-data

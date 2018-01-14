@@ -5,7 +5,8 @@
             [re-frame-form.components.button :as button]
             [re-frame-form.components.form :as form]
             [re-frame-form.components.input :as input]
-            [re-frame-form.components.field-error :as field-error]))
+            [re-frame-form.components.field-error :as field-error]
+            [re-frame-form.components.select :as select]))
 
 (defn- rff-node?
   [node key]
@@ -29,6 +30,9 @@
 
        (rff-node? node :rff/input)
        [input/mount-input node id is-submitting]
+
+       (rff-node? node :rff/select)
+       [select/mount-select node id is-submitting]
 
        (rff-node? node :rff/submit-button)
        [button/mount-submit-button node id is-submitting]
@@ -60,4 +64,19 @@
                                   :default-value default-value}
                       :id key
                       :type type}]
+   [:p.rff-field-error {:rff/field-error {:key key}}]])
+
+(defn select
+  [{:keys [key label validators default-value options]
+    :or {options [{:value ""
+                   :display "Select an option"
+                   :disabled true}]}}]
+  [:div.rff-input-wrapper
+   [:label.rff-input-label {:for key} label]
+   [:select.rff-select {:rff/select {:key key
+                                     :validators validators
+                                     :options options
+                                     :default-value (or default-value
+                                                        (:value (first options)))}
+                        :id key}]
    [:p.rff-field-error {:rff/field-error {:key key}}]])

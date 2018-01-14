@@ -32,6 +32,7 @@
                       validators default-validators}}]]
      (-> db
          (assoc-in [:form id :data key] default-value)
+         (assoc-in [:form id :defaults key] default-value)
          (assoc-in [:form id :errors key] errors)
          (assoc-in [:form id :validators key] validators)
          (assoc-in [:form id :transformers key] transformers))))
@@ -56,6 +57,9 @@
    :form/clear
    (into form-interceptors clear-interceptors)
    (fn [db [_ id]]
-     (update db :form dissoc id)))
+     (update-in db
+                [:form id]
+                (fn [{:keys [defaults] :as form}]
+                  (assoc form :data defaults)))))
 
   (reg-fx :clear-form #(dispatch [:form/clear %])))

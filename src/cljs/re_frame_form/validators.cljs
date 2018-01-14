@@ -1,6 +1,10 @@
 (ns re-frame-form.validators)
 
-(defn required [v] (not (empty? v)))
+(defn required [v]
+  (cond
+    (keyword? v) true
+
+    :else (not (empty? v))))
 
 (defn simple-email
   [v]

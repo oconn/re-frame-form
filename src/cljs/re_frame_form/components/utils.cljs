@@ -7,6 +7,7 @@
         type (.-type target)]
     (case type
       "radio" (.-id target)
+      "checkbox" (.-checked target)
       (.-value target))))
 
 (defn add-class
@@ -48,3 +49,31 @@
                              field-key
                              form-id)))
         data)))
+
+(defn input-change-fn
+  [form-id
+   {:keys [key masks]}]
+  (fn [e]
+    (re-frame/dispatch
+     [:form/update-field-value
+      form-id
+      {:field/key key
+       :field/value ((apply comp masks) (get-event-value e))}])))
+
+(defn input-blur-fn
+  [form-id
+   {:keys [key validators]}]
+  (fn [e]
+    (validate-field! (get-event-value e)
+                     validators
+                     key
+                     form-id)))
+
+(defn initialize-field
+  [{:keys [key default-value validators transformers form-id]}]
+  (re-frame/dispatch [:form/initialize-field
+                      form-id
+                      {:field/key key
+                       :field/default-value default-value
+                       :field/validators validators
+                       :field/transformers transformers}]))
