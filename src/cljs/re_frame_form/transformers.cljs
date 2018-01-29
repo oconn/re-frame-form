@@ -31,7 +31,9 @@
 (defn str->int
   "Converts a string to an integer"
   [value]
-  (js/parseInt value))
+  (if (empty? value)
+    nil
+    (js/parseInt value)))
 
 (defn str->bigdec
   "Converts a string to bigdec (transit tagged value)"
