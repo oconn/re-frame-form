@@ -1,5 +1,6 @@
 (ns re-frame-form.transformers
-  (:require [cognitect.transit :as t]))
+  (:require [cognitect.transit :as t]
+            [clojure.string]))
 
 (def ensure-lower
   "Forces lower case"

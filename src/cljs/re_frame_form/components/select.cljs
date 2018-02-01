@@ -13,9 +13,13 @@
                 transformers
                 options
                 default-value
-                placeholder]
+                placeholder
+                on-change
+                on-blur]
          :or {validators []
-              transformers []}
+              transformers []
+              on-change identity
+              on-blur identity}
          :as rff-params}
         (:rff/select params)
 
@@ -25,8 +29,12 @@
         formatted-params
         (-> params
             (dissoc :rff/select)
-            (merge {:on-change (u/input-change-fn form-id rff-params)
-                    :on-blur (u/input-blur-fn form-id rff-params)}))
+            (merge {:on-change (u/input-change-fn form-id
+                                                  rff-params
+                                                  on-change)
+                    :on-blur (u/input-blur-fn form-id
+                                              rff-params
+                                              on-blur)}))
 
         mounted-node
         (-> node
