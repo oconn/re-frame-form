@@ -49,17 +49,19 @@
   [postwalk (walk-node form-data) html])
 
 (defn input
-  [{:keys [type key label validators transformers masks default-value]
+  [{:keys [type key label validators transformers masks default-value on-change]
     :or {type :text
          validators []
          transformers []
          masks []
-         default-value ""}}]
+         default-value ""
+         on-change identity}}]
   [:div.rff-input-wrapper
    [:label.rff-input-label {:for key} label]
    [:input.rff-input {:rff/input {:key key
                                   :validators validators
                                   :transformers transformers
+                                  :on-change on-change
                                   :masks masks
                                   :default-value default-value}
                       :id key
@@ -67,15 +69,17 @@
    [:p.rff-field-error {:rff/field-error {:key key}}]])
 
 (defn select
-  [{:keys [key label validators default-value options]
+  [{:keys [key label validators default-value options on-change]
     :or {options [{:value ""
                    :display "Select an option"
-                   :disabled true}]}}]
+                   :disabled true}]
+         on-change identity}}]
   [:div.rff-input-wrapper
    [:label.rff-input-label {:for key} label]
    [:select.rff-select {:rff/select {:key key
                                      :validators validators
                                      :options options
+                                     :on-change on-change
                                      :default-value (or default-value
                                                         (:value (first options)))}
                         :id key}]
