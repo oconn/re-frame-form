@@ -52,8 +52,11 @@
 
 (defn input-change-fn
   [form-id
-   {:keys [key masks]}]
+   {:keys [key masks]}
+   custom-on-change]
   (fn [e]
+    (custom-on-change e)
+
     (re-frame/dispatch
      [:form/update-field-value
       form-id
@@ -62,8 +65,11 @@
 
 (defn input-blur-fn
   [form-id
-   {:keys [key validators]}]
+   {:keys [key validators]}
+   custom-on-blur]
   (fn [e]
+    (custom-on-blur e)
+
     (validate-field! (get-event-value e)
                      validators
                      key

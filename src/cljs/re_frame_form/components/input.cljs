@@ -8,10 +8,17 @@
   (let [params
         (second node)
 
-        {:keys [key validators transformers default-value]
+        {:keys [key
+                validators
+                transformers
+                default-value
+                on-change
+                on-blur]
          :or {default-value ""
               validators []
-              transformers []}
+              transformers []
+              on-change identity
+              on-blur identity}
          :as rff-params}
         (:rff/input params)
 
@@ -22,8 +29,12 @@
         (assoc-in node [1]
                   (-> params
                       (dissoc :rff/input)
-                      (merge {:on-change (u/input-change-fn form-id rff-params)
-                              :on-blur (u/input-blur-fn form-id rff-params)})))]
+                      (merge {:on-change (u/input-change-fn form-id
+                                                            rff-params
+                                                            on-change)
+                              :on-blur (u/input-blur-fn form-id
+                                                        rff-params
+                                                        on-blur)})))]
 
     (u/initialize-field {:key key
                          :validators validators
