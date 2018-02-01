@@ -1,14 +1,16 @@
 (ns re-frame-form.components.utils
   (:require [re-frame.core :as re-frame]))
 
+(defn get-dom-node-value
+  [node]
+  (case (.-type node)
+    "radio" (.-id node)
+    "checkbox" (.-checked node)
+    (.-value node)))
+
 (defn get-event-value
   [e]
-  (let [target (-> e .-target)
-        type (.-type target)]
-    (case type
-      "radio" (.-id target)
-      "checkbox" (.-checked target)
-      (.-value target))))
+  (get-dom-node-value (-> e .-target)))
 
 (defn add-class
   [node class-name]
@@ -52,25 +54,19 @@
 
 (defn input-change-fn
   [form-id
-   {:keys [key masks]}
-   custom-on-change]
-  (fn [e]
-    (custom-on-change e)
-
+   {:keys [key masks]}]
+  (fn [!ref]
     (re-frame/dispatch
      [:form/update-field-value
       form-id
       {:field/key key
-       :field/value ((apply comp masks) (get-event-value e))}])))
+       :field/value ((apply comp masks) (get-dom-node-value @!ref))}])))
 
 (defn input-blur-fn
   [form-id
-   {:keys [key validators]}
-   custom-on-blur]
-  (fn [e]
-    (custom-on-blur e)
-
-    (validate-field! (get-event-value e)
+   {:keys [key validators]}]
+  (fn [!ref]
+    (validate-field! (get-dom-node-value @!ref)
                      validators
                      key
                      form-id)))

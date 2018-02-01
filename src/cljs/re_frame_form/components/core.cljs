@@ -49,13 +49,26 @@
   [postwalk (walk-node form-data) html])
 
 (defn input
-  [{:keys [type key label validators transformers masks default-value on-change]
+  [{:keys [type
+           key
+           label
+           validators
+           transformers
+           masks
+           default-value
+           on-change
+           controlled
+           strict-controlled
+           placeholder]
     :or {type :text
          validators []
          transformers []
          masks []
          default-value ""
-         on-change identity}}]
+         on-change identity
+         controlled true
+         strict-controlled false
+         placeholder nil}}]
   [:div.rff-input-wrapper
    [:label.rff-input-label {:for key} label]
    [:input.rff-input {:rff/input {:key key
@@ -63,7 +76,10 @@
                                   :transformers transformers
                                   :on-change on-change
                                   :masks masks
-                                  :default-value default-value}
+                                  :default-value default-value
+                                  :controlled controlled
+                                  :strict-controlled strict-controlled
+                                  :placeholder placeholder}
                       :id key
                       :type type}]
    [:p.rff-field-error {:rff/field-error {:key key}}]])

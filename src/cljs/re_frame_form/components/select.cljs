@@ -5,7 +5,10 @@
 
 (defn mount-select
   [node form-id is-submitting]
-  (let [params
+  (let [!ref
+        (atom nil)
+
+        params
         (second node)
 
         {:keys [key
@@ -26,15 +29,22 @@
         select-data
         (re-frame/subscribe [:form/field form-id key])
 
+        re-frame-form-on-change
+        (u/input-change-fn form-id rff-params)
+
+        re-frame-form-on-blur
+        (u/input-blur-fn form-id rff-params)
+
         formatted-params
         (-> params
             (dissoc :rff/select)
-            (merge {:on-change (u/input-change-fn form-id
-                                                  rff-params
-                                                  on-change)
-                    :on-blur (u/input-blur-fn form-id
-                                              rff-params
-                                              on-blur)}))
+            (merge {:ref #(reset! !ref %)
+                    :on-change #(do
+                                 (on-change %)
+                                 (re-frame-form-on-change !ref))
+                    :on-blur #(do
+                                (on-blur %)
+                                (re-frame-form-on-blur !ref))}))
 
         mounted-node
         (-> node
