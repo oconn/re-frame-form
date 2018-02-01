@@ -59,7 +59,8 @@
            on-change
            controlled
            strict-controlled
-           placeholder]
+           placeholder
+           class-name]
     :or {type :text
          validators []
          transformers []
@@ -69,7 +70,8 @@
          controlled true
          strict-controlled false
          placeholder nil}}]
-  [:div.rff-input-wrapper
+  [:div {:class (str "rff-input-wrapper "
+                     (when class-name class-name))}
    [:label.rff-input-label {:for key} label]
    [:input.rff-input {:rff/input {:key key
                                   :validators validators
@@ -85,12 +87,19 @@
    [:p.rff-field-error {:rff/field-error {:key key}}]])
 
 (defn select
-  [{:keys [key label validators default-value options on-change]
+  [{:keys [key
+           label
+           validators
+           default-value
+           options
+           on-change
+           class-name]
     :or {options [{:value ""
                    :display "Select an option"
                    :disabled true}]
          on-change identity}}]
-  [:div.rff-input-wrapper
+  [:div {:class (str "rff-input-wrapper "
+                     (when class-name class-name))}
    [:label.rff-input-label {:for key} label]
    [:select.rff-select {:rff/select {:key key
                                      :validators validators
