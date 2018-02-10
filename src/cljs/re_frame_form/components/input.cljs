@@ -1,5 +1,6 @@
 (ns re-frame-form.components.input
   (:require [re-frame.core :as re-frame]
+            [reagent.core :as reagent]
 
             [re-frame-form.components.utils :as u])
   (:import [goog.async Debouncer]))
@@ -75,23 +76,27 @@
                          :transformers transformers
                          :default-value default-value
                          :form-id form-id})
+    (reagent/create-class
+     {:component-did-mount
+      (fn []
+        (update-input! @!ref default-value))
+      :reagent-render
+      (fn []
+        (let [{value :value errors :errors} @input-data
 
-    (fn []
-      (let [{value :value errors :errors} @input-data
+              disabled (when (not (nil? is-submitting))
+                         @is-submitting)
 
-            disabled (when (not (nil? is-submitting))
-                       @is-submitting)
+              node-with-value (cond-> mounted-node
+                                disabled
+                                (assoc-in [1 :disabled] disabled)
 
-            node-with-value (cond-> mounted-node
-                              disabled
-                              (assoc-in [1 :disabled] disabled)
+                                (not (nil? placeholder))
+                                (assoc-in [1 :placeholder] placeholder))]
 
-                              (not (nil? placeholder))
-                              (assoc-in [1 :placeholder] placeholder))]
+          (when (and controlled (not (nil? @!ref)))
+            (update-input! @!ref value))
 
-        (when (and controlled (not (nil? @!ref)))
-          (update-input! @!ref value))
-
-        (if (not-empty errors)
-          (u/add-class node-with-value "error")
-          node-with-value)))))
+          (if (not-empty errors)
+            (u/add-class node-with-value "error")
+            node-with-value)))})))
