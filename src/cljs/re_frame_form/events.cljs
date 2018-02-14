@@ -57,9 +57,11 @@
    :form/clear
    (into form-interceptors clear-interceptors)
    (fn [db [_ id]]
-     (update-in db
-                [:form id]
-                (fn [{:keys [defaults] :as form}]
-                  (assoc form :data defaults)))))
+     (if (get db [:form id])
+       (update-in db
+                  [:form id]
+                  (fn [{:keys [defaults] :as form}]
+                    (assoc form :data defaults)))
+       db)))
 
   (reg-fx :clear-form #(dispatch [:form/clear %])))
