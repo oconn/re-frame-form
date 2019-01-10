@@ -1,5 +1,7 @@
 # re-frame-form
 
+## UPDATE: Project deprecated in favor of [reagent-form](https://github.com/oconn/reagent-form)
+
 A ClojureScript (re-frame / reagent) library for working with forms
 
 ## Install
